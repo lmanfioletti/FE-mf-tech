@@ -1,6 +1,9 @@
 /* eslint-disable react/no-unescaped-entities */
+
 export default function Home() {
   return (
-   <h1>I'm in typescript</h1>
+    <>
+      <h1>I'm on typescript</h1>
+    </>
   )
 }
