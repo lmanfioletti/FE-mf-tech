@@ -1,9 +1,7 @@
-/* eslint-disable react/no-unescaped-entities */
+import Header from "@/components/Header/Header";
 
 export default function Home() {
   return (
-    <>
-      <h1>I'm on typescript</h1>
-    </>
+      <Header />
   )
 }
