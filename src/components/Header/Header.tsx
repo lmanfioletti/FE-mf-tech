@@ -6,7 +6,7 @@ interface UserProps {
     name: string,
     email: string,
     avatarSrc: string,
-}
+};
 
 const Header = () => {
 
