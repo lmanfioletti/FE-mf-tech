@@ -1,46 +1,42 @@
 import { VStack, Box, Text } from "@chakra-ui/react"
-import ReactApexChart from 'react-apexcharts'
+import dynamic from "next/dynamic";
 
+const Chart = dynamic(() => import('react-apexcharts'), {
+    ssr: false,
+});
 
 const SyncChart = () => {
-
-
-
-    const chart1series: any = [
+    const chart1series = [
         {
-            data: [12, 14,15, 15,16, 12, 14,15, 15,16,12, 14,15, 15,16,12, 14,15, 15,16,12, 14,15, 15,16,12, 14,15, 15,16,12, 14,15, 15,16,12, 14,15, 15,16],
+            name: 'C',
+            data: [12, 14, 15, 15, 16, 12, 14, 15, 15, 16, 12, 14, 15, 15, 16, 12, 14, 15, 15, 16, 12, 14, 15, 15, 16, 12, 14, 15, 15, 16, 12, 14, 15, 15, 16, 12, 14, 15, 15, 16],
         }
     ];
 
-    const chart1options: any = {
+    const chart1options = {
         chart: {
             id: 'fb',
             group: 'social',
-            type: 'line',
-            height: 200
         },
-        colors: ['#008FFB']
+        colors: ['#008F0B']
     };
 
-    const chart2series: any = [
+    const chart2series = [
         {
-            data: [10, 30,1,1,4,6,10, 30,1,1,4,6,10, 30,1,1,4,6,10, 30,1,1,4,6,10, 30,1,1,4,6,10, 30,1,1,4,6,10, 30,1,1,4,6,10, 30,1,1,4,6,10, 30,1,1,4,6],
+            name: 'U',
+            data: [12, 14, 15, 15, 16, 12, 14, 15, 15, 16, 12, 14, 15, 15, 16, 12, 14, 15, 15, 16, 12, 14, 15, 15, 16, 12, 14, 15, 15, 16, 12, 14, 15, 15, 16, 12, 14, 15, 15, 16],
         }
     ];
 
-    const chart2options: any = {
+    const chart2options = {
         chart: {
-            id: 'tb',
+            id: 'fb2',
             group: 'social',
-            type: 'line',
-            height: 200
         },
         colors: ['#008FFB']
     };
-
-
     return (
-        <VStack display="block">
+        <>
             <Box
                 p="6"
                 bg="gray.800"
@@ -49,7 +45,7 @@ const SyncChart = () => {
                 <Text fontSize="lg" mb="4">
                     Temperatura
                 </Text>
-                <ReactApexChart options={chart1options} series={chart1series} type="line" height={160} />
+                <Chart options={chart1options} series={chart1series} width="100%" type="area" height="160" />
             </Box>
             <Box
                 p="6"
@@ -59,9 +55,9 @@ const SyncChart = () => {
                 <Text fontSize="lg" mb="4">
                     Umidade
                 </Text>
-                <ReactApexChart options={chart2options} series={chart2series} type="line" height={160} />
+                <Chart options={chart2options} series={chart2series} width="100%" type="line" height={160} />
             </Box>
-        </VStack>
+        </>
     );
 
 }
