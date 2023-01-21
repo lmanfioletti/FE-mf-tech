@@ -75,8 +75,8 @@ const Dashboard = () => {
                     data.temperature.push(parseFloat(responseData[i][1].temperature.toFixed(2)));
                     data.humidity.push(parseFloat(responseData[i][1].humidity.toFixed(2)));
                 }
-                data.valency.push(responseData[i][1].valency);
-                data.excitation.push(responseData[i][1].excitation);
+                data.valency.push(responseData[i][1].valency || 0);
+                data.excitation.push(responseData[i][1].excitation || 0);
             };
         } else {
             console.log("No data available");
