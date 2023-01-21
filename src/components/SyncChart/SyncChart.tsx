@@ -1,4 +1,4 @@
-import { VStack, Box, Text, theme } from "@chakra-ui/react"
+import { VStack, Box, Text, theme, DarkMode } from "@chakra-ui/react"
 import dynamic from "next/dynamic";
 import { ApexOptions } from 'apexcharts';
 
@@ -43,7 +43,8 @@ const SyncChart = ({ xAxis, yAxis1, yAxis2 }: SyncChartProps) => {
             enabled: false
         },
         tooltip: {
-            enabled: true
+            enabled: true,
+            theme: 'dark'
         },
         xaxis: {
             type: 'datetime' as const,
@@ -53,7 +54,7 @@ const SyncChart = ({ xAxis, yAxis1, yAxis2 }: SyncChartProps) => {
             axisTicks: {
                 color: theme.colors.gray[600]
             },
-            categories: xAxis,
+            categories: xAxis
         },
         fill: {
             opacity: 0.3,
@@ -68,13 +69,10 @@ const SyncChart = ({ xAxis, yAxis1, yAxis2 }: SyncChartProps) => {
 
     const chart2options: ApexOptions = {
         chart: {
-            id: 'ib',
+            id: 'iab',
             group: 'social',
             toolbar: {
-                show: false
-            },
-            zoom: {
-                enabled: false
+                show: true
             },
             foreColor: theme.colors.gray[500]
         },
@@ -82,10 +80,11 @@ const SyncChart = ({ xAxis, yAxis1, yAxis2 }: SyncChartProps) => {
             show: false
         },
         dataLabels: {
-            enabled: true
+            enabled: false
         },
         tooltip: {
-            enabled: false
+            enabled: true,
+            theme: 'dark'
         },
         xaxis: {
             type: 'datetime' as const,
@@ -95,7 +94,7 @@ const SyncChart = ({ xAxis, yAxis1, yAxis2 }: SyncChartProps) => {
             axisTicks: {
                 color: theme.colors.gray[600]
             },
-            categories: xAxis,
+            categories: xAxis
         },
         fill: {
             opacity: 0.3,
@@ -116,7 +115,7 @@ const SyncChart = ({ xAxis, yAxis1, yAxis2 }: SyncChartProps) => {
                 borderRadius={8}
             >
                 <Text fontSize="lg" mb="4">
-                    Temperatura
+                    Temperatura (°C)
                 </Text>
                 <Chart options={chart1options} series={chart1series} width="100%" type="area" height="240" />
             </Box>
@@ -126,7 +125,7 @@ const SyncChart = ({ xAxis, yAxis1, yAxis2 }: SyncChartProps) => {
                 borderRadius={8}
             >
                 <Text fontSize="lg" mb="4">
-                    Umidade
+                    Umidade (%)
                 </Text>
                 <Chart options={chart2options} series={chart2series} width="100%" type="area" height={240} />
             </Box>

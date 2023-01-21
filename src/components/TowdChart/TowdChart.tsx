@@ -44,9 +44,9 @@ const TwodChart = ({ xAxis, yAxis }: TowdChartProps) => {
         name: 'points',
         bgcolor: '#181823',
         marker: {
-            color: 'rgb(102,0,0)',
+            color: 'rgba(0,143,251,0.7)',
             size: 2,
-            opacity: 0.4
+            opacity: 0.10
         },
         type: 'scatter',
     };
@@ -55,7 +55,7 @@ const TwodChart = ({ xAxis, yAxis }: TowdChartProps) => {
         y: yAxis,
         name: 'density',
         ncontours: 20,
-        colorscale: 'Hot',
+        colorscale: 'Greys',
         reversescale: true,
         showscale: false,
         bgcolor: '#181823',
@@ -64,7 +64,7 @@ const TwodChart = ({ xAxis, yAxis }: TowdChartProps) => {
     const trace3 = {
         x: xAxis,
         name: 'x density',
-        marker: { color: 'rgb(102,0,0)' },
+        marker: { color: 'rgba(0,143,251,0.9)' },
         yaxis: 'y2',
         hoverlabel: {
             bgcolor: '#181823',
@@ -74,7 +74,7 @@ const TwodChart = ({ xAxis, yAxis }: TowdChartProps) => {
     const trace4 = {
         y: yAxis,
         name: 'y density',
-        marker: { color: 'rgb(102,0,0)' },
+        marker: { color: 'rgba(0,143,251,0.9)' },
         xaxis: 'x2',
         hoverlabel: {
             bgcolor: '#181823',
@@ -87,29 +87,42 @@ const TwodChart = ({ xAxis, yAxis }: TowdChartProps) => {
         showlegend: false,
         autosize: false,
         width: '100%',
-        height: 550,
+        height: '100%',
         margin: { t: 50 },
         hovermode: 'closest',
         bargap: 0,
+        images: [{
+            x: -1,
+            y: -2,
+            sizex: 1,
+            sizey: 1,
+            source: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Circle_%28transparent%29.png/800px-Circle_%28transparent%29.png",
+            xanchor: "middle",
+            xref: "x",
+            yanchor: "middle",
+            yref: "y",
+        }],
         xaxis: {
             domain: [0, 0.85],
             showgrid: false,
-            zeroline: false
+            zeroline: false,
+            range: [-1, 1],
         },
         yaxis: {
             domain: [0, 0.85],
             showgrid: false,
-            zeroline: false
+            zeroline: false,
+            range: [-1, 1],
         },
         xaxis2: {
             domain: [0.85, 1],
             showgrid: false,
-            zeroline: false
+            zeroline: false,
         },
         yaxis2: {
             domain: [0.85, 1],
             showgrid: false,
-            zeroline: false
+            zeroline: false,
         }
     };
 
