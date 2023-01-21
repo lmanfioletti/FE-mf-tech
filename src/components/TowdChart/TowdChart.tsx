@@ -5,8 +5,13 @@ const Plot = dynamic(() => import('react-plotly.js'), {
     ssr: false,
 });
 
+interface TowdChartProps {
+    xAxis: number[],
+    yAxis: number[],
+};
 
-const TwodChart = () => {
+
+const TwodChart = ({ xAxis, yAxis }: TowdChartProps) => {
     function normal() {
         var x = 0,
             y = 0,
@@ -33,8 +38,8 @@ const TwodChart = () => {
         y[i] = (Math.pow(t[i], 6)) + (0.3 * normal());
     }
     const trace1 = {
-        x: x,
-        y: y,
+        x: xAxis,
+        y: yAxis,
         mode: 'markers',
         name: 'points',
         bgcolor: '#181823',
@@ -46,8 +51,8 @@ const TwodChart = () => {
         type: 'scatter',
     };
     const trace2 = {
-        x: x,
-        y: y,
+        x: xAxis,
+        y: yAxis,
         name: 'density',
         ncontours: 20,
         colorscale: 'Hot',
@@ -57,7 +62,7 @@ const TwodChart = () => {
         type: 'histogram2dcontour'
     };
     const trace3 = {
-        x: x,
+        x: xAxis,
         name: 'x density',
         marker: { color: 'rgb(102,0,0)' },
         yaxis: 'y2',
@@ -67,7 +72,7 @@ const TwodChart = () => {
         type: 'histogram'
     };
     const trace4 = {
-        y: y,
+        y: yAxis,
         name: 'y density',
         marker: { color: 'rgb(102,0,0)' },
         xaxis: 'x2',
