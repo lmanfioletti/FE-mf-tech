@@ -58,7 +58,8 @@ const Dashboard = () => {
     // Initialize Realtime Database and get a reference to the service
     const db = getDatabase(app);
     const dbRef = ref(db);
-    useEffect(() => {
+
+useEffect(() => {
         const getSnapshot = async () => {
             try {const snapshot = await get(child(dbRef, 'drivers/' + driverID + "/trips/" + tripID));
             if (snapshot.exists()) {
@@ -88,10 +89,10 @@ const Dashboard = () => {
         }catch(error){
             console.error(error);
         };
+
         }
         getSnapshot();
     }, [driverID, tripID, dbRef]);
-
 
     return (
         <Flex direction="column" h="100vh">
