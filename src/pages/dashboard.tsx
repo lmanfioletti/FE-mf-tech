@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react"
-import { Flex, VStack } from "@chakra-ui/react"
+import { useState, useEffect, useMemo } from "react"
+import { Center, Flex, Spinner, VStack } from "@chakra-ui/react"
 import Header from "@/components/Header/Header";
 import Sidebar from "@/components/Sidebar/Sidebar";
 import DriverCard from "@/components/DriverCard/DriverCard";
@@ -36,6 +36,18 @@ interface responseProps {
 };
 
 const Dashboard = () => {
+    const [driverID, setDriverID] = useState("lucas-manffioleti");
+    const [tripID, setTripID] = useState("-NMHD38zq3vZe5IRoPlX");
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const [data, setData] = useState<chartsProps>({                    
+        time: [],
+        temperature: [],
+        humidity: [],
+        valency: [],
+        excitation: [],});
+    const [isSucess, setIsSucess] = useState(false);
+    
     const firebaseConfig = {
         databaseURL: "https://mftech-test-default-rtdb.firebaseio.com",
     };
@@ -45,53 +57,42 @@ const Dashboard = () => {
 
     // Initialize Realtime Database and get a reference to the service
     const db = getDatabase(app);
-
-    const [driverID, setDriverID] = useState("lucas-manffioleti");
-    const [tripID, setTripID] = useState("-NMHD38zq3vZe5IRoPlX");
-    // const [data, setData] = useState<chartsProps>();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const data: chartsProps = {
-        time: [],
-        temperature: [],
-        humidity: [],
-        valency: [],
-        excitation: []
-    };
-
-    useEffect(() => {
-        console.log("data", data);
-    }, [data]);
-
     const dbRef = ref(db);
-    get(child(dbRef, 'drivers/' + driverID + "/trips/" + tripID)).then((snapshot) => {
-        if (snapshot.exists()) {
-            const response: responseProps = snapshot.val();
-            const dataLenght: number = Object.keys(response.data).length;
-            const responseData: dataProps = Object.entries(response.data);
-            console.log(responseData)
-            for (var i = 0; i < dataLenght; i++) {
-                if(i == 0 || i%100 == 0){
-                    data.time.push(responseData[i][1].time);
-                    data.temperature.push(parseFloat(responseData[i][1].temperature.toFixed(2)));
-                    data.humidity.push(parseFloat(responseData[i][1].humidity.toFixed(2)));
-                }
-                data.valency.push(responseData[i][1].valency || 0);
-                data.excitation.push(responseData[i][1].excitation || 0);
-            };
-        } else {
-            console.log("No data available");
+
+useEffect(() => {
+        const getSnapshot = async () => {
+            try {const snapshot = await get(child(dbRef, 'drivers/' + driverID + "/trips/" + tripID));
+            if (snapshot.exists()) {
+                const newData: chartsProps = {                    
+                    time: [],
+                    temperature: [],
+                    humidity: [],
+                    valency: [],
+                    excitation: [],};
+                const response: responseProps = snapshot.val();
+                const dataLenght: number = Object.keys(response.data).length;
+                const responseData: dataProps = Object.entries(response.data);
+                for (var i = 0; i < dataLenght; i++) {
+                    if(i == 0 || i%100 == 0){
+                        newData.time.push(responseData[i][1].time);
+                        newData.temperature.push(parseFloat(responseData[i][1].temperature.toFixed(2)));
+                        newData.humidity.push(parseFloat(responseData[i][1].humidity.toFixed(2)));
+                    }
+                    newData.valency.push(responseData[i][1].valency || 0);
+                    newData.excitation.push(responseData[i][1].excitation || 0);
+                };
+                setData(newData);
+                setIsSucess(true);
+            } else {
+                console.log("No data available");
+            }
+        }catch(error){
+            console.error(error);
+        };
+
         }
-    }).catch((error) => {
-        console.error(error);
-    });
-
-    const isSucess = true;
-
-    // const driverData = ref(db, 'drivers' + driverID);
-    // onValue(driverData, (snapshot) => {
-    //     const data = snapshot.val();
-    //     console.log(data);
-    // });
+        getSnapshot();
+    }, [driverID, tripID, dbRef]);
 
     return (
         <Flex direction="column" h="100vh">
@@ -101,8 +102,12 @@ const Dashboard = () => {
                 <Flex width="100%" flexDir="column" >
                     <DriverCard />
                     <VStack display="block">
+                        {!isSucess && 
+                        <Center>
+                        <Spinner label="Carregando dados do motorista..." color="purple"/>
+                        </Center>}
                         {isSucess && <SyncChart xAxis={data.time} yAxis1={data.temperature} yAxis2={data.humidity}/>}
-                        <TwodChart xAxis={data.valency} yAxis={data.excitation}/>
+                        {isSucess && <TwodChart xAxis={data.valency} yAxis={data.excitation}/>}
                     </VStack>
                 </Flex>
             </Flex>
