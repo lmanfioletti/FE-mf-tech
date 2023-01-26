@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect, useMemo, useCallback } from "react"
 import { Center, Flex, Select, Spinner, VStack } from "@chakra-ui/react"
 import Header from "@/components/Header/Header";
 import Sidebar from "@/components/Sidebar/Sidebar";
@@ -36,19 +36,20 @@ interface responseProps {
     destination: string,
 };
 
+interface tripName {
+    origin: string,
+    destination: string,
+};
+
 const Dashboard = () => {
-    const [driverID, setDriverID] = useState("lucas_manfioletti");
-    const [tripID, setTripID] = useState("-NManwYAPKpKkKq7U8SL");
+    const [driverName, setDriverName] = useState("");
+    const [driverID, setDriverID] = useState("");
+    const [tripID, setTripID] = useState("");
+    const [tripName, setTripName] = useState<tripName>({} as tripName);
     const [showOptions, setShowOptions] = useState(true);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    const [data, setData] = useState<chartsProps>({
-        time: [],
-        temperature: [],
-        humidity: [],
-        valency: [],
-        excitation: [],
-    });
+    const [data, setData] = useState<chartsProps>({} as chartsProps);
     const [isSucess, setIsSucess] = useState(false);
 
     // Initialize Realtime Database and get a reference to the service
@@ -59,9 +60,9 @@ const Dashboard = () => {
         const getSnapshot = async () => {
             try {
                 const snapshot = await get(child(dbRef, 'drivers/' + driverID + "/trips/" + tripID));
-
-                // const axiosget = await api.get('drivers/'+ driverID + '/trips/' + tripID).then(response => console.log("axios get" + response));
-                if (snapshot) {
+                const snapshotName = await get(child(dbRef, 'drivers/' + driverID + "/full_name"));
+                if (snapshot && snapshotName) {
+                    setDriverName(snapshotName.val());
                     const newData: chartsProps = {
                         time: [],
                         temperature: [],
@@ -70,6 +71,7 @@ const Dashboard = () => {
                         excitation: [],
                     };
                     const response: responseProps = snapshot.val();
+                    setTripName({ destination: response.destination, origin: response.origin });
                     const dataLenght: number = Object.keys(response.data).length;
                     const responseData: dataProps = Object.entries(response.data);
                     for (var i = 0; i < dataLenght; i++) {
@@ -94,23 +96,48 @@ const Dashboard = () => {
         getSnapshot();
     }, [driverID, tripID, dbRef]);
 
+    const onSelectTrip = useCallback((driverId: string, tripId: string) => {
+        console.log(driverId);
+        console.log(tripId);
+        setShowOptions(false);
+        setDriverID(driverId);
+        setTripID(tripId);
+        setIsSucess(false);
+    }, [])
+    
+    const onBackToSelect = useCallback(() => {
+        setShowOptions(true);
+        setData({} as chartsProps);
+    }, []);
+
     return (
         <Flex direction="column" h="100vh">
             <Header />
             <Flex w="100%" my="6" maxW={1480} mx="auto" px="6">
                 <Sidebar />
-                {showOptions && <DropdownCard dbRef={dbRef} onSelectTrip={(driverId: string, tripId: string) => {setDriverID(driverId); setTripID(tripId);}}/>}
-                {showOptions && (
+                {showOptions && <DropdownCard onSelectTrip={onSelectTrip} />}
+                {!showOptions && (
                     <Flex width="100%" flexDir="column" >
-                        <DriverCard />
-                        <VStack display="block">
-                            {!isSucess &&
+                        {!isSucess &&
+                            <Flex
+                                w="100vw"
+                                h="100vh"
+                                align="center"
+                                justify="center"
+                            >
                                 <Center>
                                     <Spinner label="Carregando dados do motorista..." color="purple" />
-                                </Center>}
-                            {isSucess && <SyncChart xAxis={data.time} yAxis1={data.temperature} yAxis2={data.humidity} />}
-                            {isSucess && <TwodChart xAxis={data.valency} yAxis={data.excitation} />}
-                        </VStack>
+                                </Center>
+                            </Flex>}
+                        {isSucess && (
+                            <>
+                                <DriverCard onBack={onBackToSelect} driverName={driverName} tripName={tripName} />
+                                <VStack display="block">
+                                    <SyncChart xAxis={data.time} yAxis1={data.temperature} yAxis2={data.humidity} />
+                                    <TwodChart xAxis={data.valency} yAxis={data.excitation} />
+                                </VStack>
+                            </>
+                        )}
                     </Flex>
                 )}
             </Flex>

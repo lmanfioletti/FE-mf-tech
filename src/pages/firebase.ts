@@ -5,7 +5,7 @@ import { env } from "process";
 const firebaseConfig = {
   apiKey: env.API_KEY,
   authDomain: env.AUTH_DOMAIN,
-  databaseURL: env.DATA_BASE_URL,
+  databaseURL: "https://mftech-test-default-rtdb.firebaseio.com",  
   projectId: env.PROJECT_ID,
   storageBucket: env.STORAGE_BUCKET,
   messagingSenderId: env.MESSAGING_SENDER_ID,
