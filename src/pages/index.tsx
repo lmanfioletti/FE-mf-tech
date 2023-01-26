@@ -1,30 +1,76 @@
-import Input from '@/components/Form/Input'
-import { Flex, Button, Stack } from '@chakra-ui/react'
+import { useEffect } from "react";
+import { FcGoogle } from "react-icons/fc";
 
-export default function SignIn() {
-  return (
-    <Flex
-      w="100vw"
-      h="100vh"
-      align="center"
-      justify="center"
-    >
-      <Flex
-        as="form"
-        width="100%"
-        maxWidth={360}
-        bg="gray.800"
-        p="8"
-        borderRadius={8}
-        flexDir="column"
-      >
-        <Stack spacing={4}>
-          <Input name='email' label='Email' type='email'/>
-          <Input name='password' label='Senha' type='password'/>
-        </Stack>
+import {
+  Button,
+  Flex,
+  Text,
+  useToast,
+  UseToastOptions,
+} from "@chakra-ui/react";
+import type { NextPage } from "next";
+import { signIn } from "next-auth/react";
+import Head from "next/head";
+import { fireErrorToast } from "../common/utils";
 
-        <Button type='submit' mt={6} colorScheme="purple" >Entrar</Button>
-      </Flex>
-    </Flex>
-  )
+interface Props {
+  error?: string | string[];
 }
+
+const SignIn: NextPage<Props> = ({ error }) => {
+  const toast = useToast();
+
+  useEffect(() => {
+    if (error) {
+      const toastOptions: UseToastOptions = {};
+
+      if (error === "AccessDenied") {
+        toastOptions.description = (
+          <Text>
+            O email não é do domínio da
+            <Text as="strong"> CT Junior</Text>
+          </Text>
+        );
+      } else {
+        toastOptions.title = error;
+        toastOptions.description =
+          "Um erro inesperado ocorreu. Tente novamente.";
+      }
+
+      fireErrorToast(toast, toastOptions);
+    }
+  }, [error, toast]);
+
+  return (
+    <>
+      <Head>
+        <title>Login</title>
+      </Head>
+      <Flex w="100vw" h="100vh" align="center" justify="center">
+        <Button
+          onClick={() => signIn("google", { callbackUrl: "/" })}
+          pr={8}
+          pl={8}
+          h="60px"
+          leftIcon={<FcGoogle size={24} />}
+          bg="white"
+          color="blackAlpha.700"
+          shadow="md"
+          _hover={{
+            bgColor: "gray.50",
+          }}
+        >
+          Continuar com o google
+        </Button>
+      </Flex>
+    </>
+  );
+};
+
+SignIn.getInitialProps = async ({ query }) => {
+  const { error } = query;
+
+  return { error };
+};
+
+export default SignIn;

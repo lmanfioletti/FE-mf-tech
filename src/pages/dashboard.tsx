@@ -1,14 +1,15 @@
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect } from "react"
 import { Center, Flex, Spinner, VStack } from "@chakra-ui/react"
-import Header from "@/components/Header/Header";
-import Sidebar from "@/components/Sidebar/Sidebar";
-import DriverCard from "@/components/DriverCard/DriverCard";
-import SyncChart from "@/components/SyncChart/SyncChart";
-import TwodChart from "@/components/TowdChart/TowdChart";
+import Header from "../components/Header/Header";
+import Sidebar from "../components/Sidebar/Sidebar";
+import DriverCard from "../components/DriverCard/DriverCard";
+import SyncChart from "../components/SyncChart/SyncChart";
+import TwodChart from "../components/TowdChart/TowdChart";
 
-import { initializeApp } from "firebase/app";
-import { getDatabase, ref, onValue, get, child } from "firebase/database"
 
+import {ref,  get, child } from "firebase/database"
+import { app, db, firebaseConfig} from "../services/firebase"
+import { useSession } from "next-auth/react";
 interface chartsProps {
     time: string[],
     temperature: number[],
@@ -38,7 +39,6 @@ interface responseProps {
 const Dashboard = () => {
     const [driverID, setDriverID] = useState("lucas-manffioleti");
     const [tripID, setTripID] = useState("-NMHD38zq3vZe5IRoPlX");
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const [data, setData] = useState<chartsProps>({                    
         time: [],
@@ -48,15 +48,7 @@ const Dashboard = () => {
         excitation: [],});
     const [isSucess, setIsSucess] = useState(false);
     
-    const firebaseConfig = {
-        databaseURL: "https://mftech-test-default-rtdb.firebaseio.com",
-    };
-
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-
-    // Initialize Realtime Database and get a reference to the service
-    const db = getDatabase(app);
+    
     const dbRef = ref(db);
 
 useEffect(() => {

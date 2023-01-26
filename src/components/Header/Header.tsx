@@ -1,21 +1,13 @@
-import { Flex, Text, Icon, HStack, Box, Avatar, Image } from '@chakra-ui/react';
-
+import { Flex, Text, Icon, HStack, Box, Avatar } from '@chakra-ui/react';
+import { useSession } from 'next-auth/react';
+import Logo from "../../../public/img/logowhite.png"
 import { RiSettings2Fill } from 'react-icons/ri';
+import Image from 'next/image';
 
-interface UserProps {
-    name: string,
-    email: string,
-    avatarSrc: string,
-};
 
 const Header = () => {
-
-    const user: UserProps = {
-        name: "Fulano da Silva",
-        email: "fulano123@gmail.com",
-        avatarSrc: "https://avatarfiles.alphacoders.com/128/thumb-128984.png"
-    };
-
+    const { data } = useSession();
+    
     return (
         <Flex
             as="header"
@@ -27,7 +19,7 @@ const Header = () => {
             px="6"
             align="center"
         >
-            <Image src='img/logowhite.png'/>
+            <Image src={Logo} alt="Logo" />
             <Flex
                 align="center"
                 ml="auto"
@@ -43,16 +35,18 @@ const Header = () => {
                 >
                     <Icon as={RiSettings2Fill} fontSize="20"/>
                 </HStack>
-
+            { data?.user && (
                 <Flex align="center">
-                    <Box mr={4}>
-                        <Text>{user.name}</Text>
-                        <Text color="gray.300" fontSize="small">
-                            {user.email}
-                        </Text>    
-                    </Box>
-                    <Avatar size="md" name={user.name} src={user.avatarSrc}/>                    
+                <Box mr={4}>
+                    <Text>{data?.user?.name}</Text>
+                    <Text color="gray.300" fontSize="small">
+                        {data?.user?.email}
+                    </Text>    
+                </Box>
+                <Avatar size="md" src={`${data?.user?.image}`}/>                    
                 </Flex>
+            )}
+               
             </Flex>
 
         </Flex>
