@@ -1,10 +1,10 @@
-import { Flex, Text, Icon, HStack, Box, Avatar } from '@chakra-ui/react';
+import { Flex, Text, Icon, HStack, Box, Avatar, IconButton } from '@chakra-ui/react';
 import { useSession } from 'next-auth/react';
 import Logo from "../../../public/img/logowhite.png"
 import { RiSettings2Fill } from 'react-icons/ri';
 import Image from 'next/image';
-
-
+import { GoSignOut } from "react-icons/go"
+import { signOut } from "next-auth/react";
 const Header = () => {
     const { data } = useSession();
     
@@ -43,7 +43,20 @@ const Header = () => {
                         {data?.user?.email}
                     </Text>    
                 </Box>
-                <Avatar size="md" src={`${data?.user?.image}`}/>                    
+                <Avatar size="md" src={`${data?.user?.image}`}/>    
+                <IconButton 
+                    ml="4"
+                    borderRadius="full"
+                    bg="transparent" 
+                    _hover={{
+                        bg: "transparent"
+                    }} 
+                    aria-label='SignOut' 
+                    fontSize="36px"
+                    icon={<GoSignOut   />} 
+                    onClick={() => signOut()}
+                    /> 
+                                   
                 </Flex>
             )}
                

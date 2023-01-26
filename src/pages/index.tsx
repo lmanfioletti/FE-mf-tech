@@ -9,9 +9,10 @@ import {
   UseToastOptions,
 } from "@chakra-ui/react";
 import type { NextPage } from "next";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Head from "next/head";
 import { fireErrorToast } from "../common/utils";
+import { useRouter } from "next/router";
 
 interface Props {
   error?: string | string[];
@@ -19,6 +20,9 @@ interface Props {
 
 const SignIn: NextPage<Props> = ({ error }) => {
   const toast = useToast();
+  const { status } = useSession();
+  console.log(status)
+  const router = useRouter();
 
   useEffect(() => {
     if (error) {
@@ -39,7 +43,9 @@ const SignIn: NextPage<Props> = ({ error }) => {
 
       fireErrorToast(toast, toastOptions);
     }
-  }, [error, toast]);
+    if(status === "authenticated")
+      router.push("/dashboard");
+  }, [error, toast, status]);
 
   return (
     <>
