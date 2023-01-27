@@ -1,6 +1,13 @@
 import React from "react";
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Divider, HStack, Text, theme } from "@chakra-ui/react";
 import dynamic from "next/dynamic";
+import { emotionsCounter } from "../../pages/dashboard";
+
+import { ApexOptions } from 'apexcharts';
+
+const Chart = dynamic(() => import('react-apexcharts'), {
+    ssr: false,
+});
 
 const Plot = dynamic(() => import('react-plotly.js'), {
     ssr: false,
@@ -9,10 +16,11 @@ const Plot = dynamic(() => import('react-plotly.js'), {
 interface TowdChartProps {
     xAxis: number[],
     yAxis: number[],
+    emotions: emotionsCounter
 };
 
 
-const TwodChart = ({ xAxis, yAxis }: TowdChartProps) => {
+const TwodChart = ({ xAxis, yAxis, emotions }: TowdChartProps) => {
     function normal() {
         var x = 0,
             y = 0,
@@ -85,10 +93,15 @@ const TwodChart = ({ xAxis, yAxis }: TowdChartProps) => {
     var data: any = [trace1, trace2, trace3, trace4];
 
     var layout: any = {
+        paper_bgcolor: '1f2029',
+        plot_bgcolor: '1f2029',
+        font: {
+            color: theme.colors.white,
+        },
         showlegend: false,
         autosize: false,
         width: '100%',
-        height: '100%',
+        height: '90%',
         margin: { t: 50 },
         hovermode: 'closest',
         bargap: 0,
@@ -127,6 +140,49 @@ const TwodChart = ({ xAxis, yAxis }: TowdChartProps) => {
         }
     };
 
+    const series = [emotions.Entusiasmo, emotions.Feliz, emotions.Prazer, emotions.Contente, emotions.Tranquilo, emotions.Cansado, emotions.Tristeza, emotions.Desprazer, emotions.Chateado, emotions.Medo, emotions.Raiva];
+
+    const options: ApexOptions = {
+        chart: {
+            type: 'polarArea',
+            foreColor: theme.colors.gray[500],
+            toolbar: {
+                show: true
+            },
+        },
+        labels: ['Entusiasmo', 'Feliz', 'Prazer', 'Contente', 'Tranquilo', 'Cansado', 'Tristeza', 'Desprazer', 'Chateado', 'Medo', 'Raiva'],
+        fill: {
+            opacity: 1
+        },
+        stroke: {
+            width: 1,
+            colors: undefined,
+        },
+        yaxis: {
+            show: false
+        },
+        legend: {
+            position: 'bottom'
+        },
+        plotOptions: {
+            polarArea: {
+                rings: {
+                    strokeWidth: 0
+                },
+                spokes: {
+                    strokeWidth: 0
+                },
+            }
+        },
+        theme: {
+            monochrome: {
+                enabled: true,
+                shadeTo: 'dark',
+                shadeIntensity: 0.6
+            }
+        }
+    }
+
     return (
         <Box
             p="6"
@@ -136,14 +192,28 @@ const TwodChart = ({ xAxis, yAxis }: TowdChartProps) => {
             display="flex"
             flexDir="column"
         >
-            <Text fontSize="lg" mb="4">
-                Valencia x Exitação
-            </Text>
+            <HStack >
+                <Box>
+                    <Text fontSize="lg" mb="4">
+                        Valencia x Exitação
+                    </Text>
 
-            <Plot
-                data={data}
-                layout={layout}
-            />
+                    <Plot
+                        data={data}
+                        layout={layout}
+                    />
+                </Box>
+                <Box
+                    p="6"
+                    bg="gray.800"
+                    borderRadius={8}
+                >
+                    <Text fontSize="lg" mb="4">
+                        Emoções durante a viagem
+                    </Text>
+                    <Chart options={options} series={series} width="100%" type="polarArea" height={440} />
+                </Box>
+            </HStack>
         </Box>
     );
 };

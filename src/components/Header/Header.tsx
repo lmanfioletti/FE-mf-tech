@@ -44,7 +44,7 @@ const Header = () => {
                                 {data?.user?.email}
                             </Text>
                         </Box>
-                        <Avatar size="md" src={`${data?.user?.image}`} />
+                        <Avatar size="md" src={`${data.user.image}`} />
                         <HStack
                             spacing="8"
                             mx="8"

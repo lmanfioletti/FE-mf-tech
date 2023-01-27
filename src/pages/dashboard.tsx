@@ -16,8 +16,24 @@ interface chartsProps {
     temperature: number[],
     humidity: number[],
     valency: number[],
-    excitation: number[]
+    excitation: number[],
+    emotion: emotionsCounter
 };
+
+export interface emotionsCounter {
+    Neutro: number,
+    Entusiasmo: number,
+    Feliz: number,
+    Prazer: number,
+    Contente: number,
+    Tranquilo: number,
+    Cansado: number,
+    Tristeza: number,
+    Desprazer: number,
+    Chateado: number,
+    Medo: number,
+    Raiva: number
+}
 
 interface dataProps {
     [index: number]: { 0: String; 1: responseDataProps; }
@@ -29,6 +45,7 @@ interface responseDataProps {
     temperature: number,
     humidity: number,
     excitation: number,
+    emotion: string,
 }
 
 interface responseProps {
@@ -52,7 +69,7 @@ const Dashboard = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const [data, setData] = useState<chartsProps>({} as chartsProps);
     const [isSucess, setIsSucess] = useState(false);
-    
+
     const dbRef = ref(db);
 
     useEffect(() => {
@@ -68,6 +85,20 @@ const Dashboard = () => {
                         humidity: [],
                         valency: [],
                         excitation: [],
+                        emotion: {
+                            Neutro: 0,
+                            Entusiasmo: 0,
+                            Feliz: 0,
+                            Prazer: 0,
+                            Contente: 0,
+                            Tranquilo: 0,
+                            Cansado: 0,
+                            Tristeza: 0,
+                            Desprazer: 0,
+                            Chateado: 0,
+                            Medo: 0,
+                            Raiva: 0
+                        }
                     };
                     const response: responseProps = snapshot.val();
                     setTripName({ destination: response.destination, origin: response.origin });
@@ -81,8 +112,11 @@ const Dashboard = () => {
                         }
                         newData.valency.push(responseData[i][1].valency || 0);
                         newData.excitation.push(responseData[i][1].excitation || 0);
+                        console.log(responseData[i][1].emotion)
+                        newData.emotion[responseData[i][1].emotion] += 1;
                     };
                     setData(newData);
+                    console.log(newData.emotion)
                     setIsSucess(true);
                 } else {
                     console.log("No data available");
@@ -101,7 +135,7 @@ const Dashboard = () => {
         setTripID(tripId);
         setIsSucess(false);
     }, [])
-    
+
     const onBackToSelect = useCallback(() => {
         setShowOptions(true);
         setData({} as chartsProps);
@@ -131,7 +165,7 @@ const Dashboard = () => {
                                 <DriverCard onBack={onBackToSelect} driverName={driverName} tripName={tripName} />
                                 <VStack display="block">
                                     <SyncChart xAxis={data.time} yAxis1={data.temperature} yAxis2={data.humidity} />
-                                    <TwodChart xAxis={data.valency} yAxis={data.excitation} />
+                                    <TwodChart xAxis={data.valency} yAxis={data.excitation} emotions={data.emotion}/>
                                 </VStack>
                             </>
                         )}
