@@ -112,11 +112,9 @@ const Dashboard = () => {
                         }
                         newData.valency.push(responseData[i][1].valency || 0);
                         newData.excitation.push(responseData[i][1].excitation || 0);
-                        console.log(responseData[i][1].emotion)
-                        newData.emotion[responseData[i][1].emotion] += 1;
+                        newData.emotion[responseData[i][1].emotion as keyof emotionsCounter] += 1;
                     };
                     setData(newData);
-                    console.log(newData.emotion)
                     setIsSucess(true);
                 } else {
                     console.log("No data available");
