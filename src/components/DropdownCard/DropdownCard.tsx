@@ -1,7 +1,8 @@
+import React from "react";
 import { useCallback, useEffect, useState } from "react";
 import { Box, Button, Flex, Select, Stack, Text } from "@chakra-ui/react";
 import { DatabaseReference, get, child, ref, getDatabase } from "firebase/database";
-import firebase from "@/services/firebase";
+import { db } from "../../services/firebase";
 
 interface driver{
         full_name: string,
@@ -29,9 +30,7 @@ const DropdownCard = ({onSelectTrip}: DropdownCardProps) => {
     const [isLoadedTrips, setIsLoadedTrips] = useState(false);
 
     // Initialize Realtime Database and get a reference to the service
-    const db = getDatabase(firebase);
     const dbRef = ref(db);
-    
     
     const onSelectDriver = useCallback((driverId: string) => {
         setDriverID(driverId);

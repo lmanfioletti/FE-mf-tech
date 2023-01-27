@@ -1,15 +1,16 @@
+import React from "react";
 import { useState, useEffect, useCallback } from "react"
 import { Center, Flex, Spinner, VStack } from "@chakra-ui/react"
-import Header from "@/components/Header/Header";
-import Sidebar from "@/components/Sidebar/Sidebar";
-import DriverCard from "@/components/DriverCard/DriverCard";
-import SyncChart from "@/components/SyncChart/SyncChart";
-import TwodChart from "@/components/TowdChart/TowdChart";
+import Header from "../components/Header/Header";
+import Sidebar from "../components/Sidebar/Sidebar";
+import DriverCard from "../components/DriverCard/DriverCard";
+import SyncChart from "../components/SyncChart/SyncChart";
+import TwodChart from "../components/TowdChart/TowdChart";
 
-import { getDatabase, ref, onValue, get, child } from "firebase/database"
-import DropdownCard from "@/components/DropdownCard/DropdownCard";
-import firebase from '../services/firebase';
+import { ref, get, child } from "firebase/database"
+import DropdownCard from "../components/DropdownCard/DropdownCard";
 
+import { db } from "../services/firebase"
 interface chartsProps {
     time: string[],
     temperature: number[],
@@ -51,9 +52,7 @@ const Dashboard = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const [data, setData] = useState<chartsProps>({} as chartsProps);
     const [isSucess, setIsSucess] = useState(false);
-
-    // Initialize Realtime Database and get a reference to the service
-    const db = getDatabase(firebase);
+    
     const dbRef = ref(db);
 
     useEffect(() => {
@@ -97,8 +96,6 @@ const Dashboard = () => {
     }, [driverID, tripID, dbRef]);
 
     const onSelectTrip = useCallback((driverId: string, tripId: string) => {
-        console.log(driverId);
-        console.log(tripId);
         setShowOptions(false);
         setDriverID(driverId);
         setTripID(tripId);
@@ -120,8 +117,8 @@ const Dashboard = () => {
                     <Flex width="100%" flexDir="column" >
                         {!isSucess &&
                             <Flex
-                                w="100vw"
-                                h="100vh"
+                                w="100%"
+                                h="100%"
                                 align="center"
                                 justify="center"
                             >

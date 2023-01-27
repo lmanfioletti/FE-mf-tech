@@ -1,3 +1,4 @@
+import React from 'react';
 import { Text, Flex, Link, Icon, HStack, Avatar, Box } from '@chakra-ui/react';
 
 import { RiArrowLeftSLine } from 'react-icons/ri';
