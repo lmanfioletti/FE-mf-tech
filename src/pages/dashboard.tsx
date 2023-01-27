@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo, useCallback } from "react"
-import { Center, Flex, Select, Spinner, VStack } from "@chakra-ui/react"
+import { useState, useEffect, useCallback } from "react"
+import { Center, Flex, Spinner, VStack } from "@chakra-ui/react"
 import Header from "@/components/Header/Header";
 import Sidebar from "@/components/Sidebar/Sidebar";
 import DriverCard from "@/components/DriverCard/DriverCard";
@@ -8,7 +8,7 @@ import TwodChart from "@/components/TowdChart/TowdChart";
 
 import { getDatabase, ref, onValue, get, child } from "firebase/database"
 import DropdownCard from "@/components/DropdownCard/DropdownCard";
-import firebase from './firebase';
+import firebase from '../services/firebase';
 
 interface chartsProps {
     time: string[],

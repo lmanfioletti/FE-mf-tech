@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Box, Button, Flex, Select, Stack, Text } from "@chakra-ui/react";
 import { DatabaseReference, get, child, ref, getDatabase } from "firebase/database";
-import firebase from "@/pages/firebase";
+import firebase from "@/services/firebase";
 
 interface driver{
         full_name: string,
