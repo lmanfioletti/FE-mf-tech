@@ -22,7 +22,6 @@ export default function SignIn() {
           <Input name='email' label='Email' type='email'/>
           <Input name='password' label='Senha' type='password'/>
         </Stack>
-
         <Button type='submit' mt={6} colorScheme="purple" >Entrar</Button>
       </Flex>
     </Flex>
