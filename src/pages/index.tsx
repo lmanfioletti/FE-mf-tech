@@ -1,3 +1,4 @@
+import React from "react";
 import { useEffect } from "react";
 import { FcGoogle } from "react-icons/fc";
 
@@ -21,7 +22,6 @@ interface Props {
 const SignIn: NextPage<Props> = ({ error }) => {
   const toast = useToast();
   const { status } = useSession();
-  console.log(status)
   const router = useRouter();
 
   useEffect(() => {
@@ -45,6 +45,7 @@ const SignIn: NextPage<Props> = ({ error }) => {
     }
     if(status === "authenticated")
       router.push("/dashboard");
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error, toast, status]);
 
   return (
