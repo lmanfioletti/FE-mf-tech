@@ -60,11 +60,11 @@ const SignIn: NextPage<Props> = ({ error }) => {
           pl={8}
           h="60px"
           leftIcon={<FcGoogle size={24} />}
-          bg="white"
-          color="blackAlpha.700"
+          bg="gray.800"
+          color="whiteAlpha.700"
           shadow="md"
           _hover={{
-            bgColor: "gray.50",
+            bgColor: "gray.600",
           }}
         >
           Continuar com o google
